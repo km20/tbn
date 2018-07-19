@@ -1,0 +1,11 @@
+export("learn.tbn",
+       "learn.trm",
+       "scores.tbn",
+       "scores.trm",
+       "sensi.tbn",
+       "sensi.trm",
+       "generateSample")
+
+import(tweedie)
+importFrom("statmod","rinvgauss")
+importFrom("stats","glm")

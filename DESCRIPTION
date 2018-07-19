@@ -1,0 +1,11 @@
+Package: tbn
+Type: Package
+Title: Tweedie Bayesian Network
+Version: 0.1.0
+Depends: R (>= 3.0.0)
+Author: Khalil Masmoudi <khalil.masmoudi@centraliens.net>
+Maintainer: Khalil Masmoudi <khalil.masmoudi@centraliens.net>
+Description: A set of functions to deal with Tweedie Bayesian Networks.
+License: GPL (>=2)
+Encoding: UTF-8
+RoxygenNote: 6.0.1

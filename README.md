@@ -1,33 +1,23 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-tbn : A package to deal with Tweedie Bayesian networs
-=====================================================
+tbn : A package to deal with Tweedie Bayesian networks
+======================================================
 
-This package provides several useful functions to deal with Tweedie
-Regression mode (TRMs) and Tweedie Bayesian Networks (TBNs).
-$$ \\begin{equation} f(x\|\\Theta) = \\sum\_{k=1}^{K}{\\pi\_k f\_k(x\|\\mu\_k,\\Sigma\_k)}\\end{equation}$$
+This package provides several useful functions to deal with both the
+Tweedie Regression models (TRMs) and the Tweedie Bayesian Networks
+(TBNs).
 
-where *f*<sub>*k*</sub>(*x*\|*μ*<sub>*k*</sub>, *Σ*<sub>*k*</sub>) is
-the density function of the multivariate normal distribution with mean
-*μ*<sub>*k*</sub> and covariance matrix *Σ*<sub>*k*</sub>, and the
-mixing proportions 0 &lt; *π*<sub>*k*</sub> &lt; 1 satisfy
-$\\displaystyle\\sum\_{k=1}^{K}\\pi\_{k}=1$. In addition, each component
-of this mixture is associated with a decomposable undirected graph
-*G*<sub>*k*</sub> = (*V*, ℰ<sub>*k*</sub>), where *V* is the vertices
-(nodes) set and ℰ<sub>*k*</sub> corresponds to the edges of the graph
-*G*<sub>*k*</sub>. The set of all the mixture parameters is
-*Θ* = {*π*<sub>1</sub>, ..., *π*<sub>*K*</sub>, *μ*<sub>1</sub>, ..., *μ*<sub>*K*</sub>, *Σ*<sub>1</sub>, ..., *Σ*<sub>*K*</sub>}
-
-This package allows the estimation of the mixture parameters and data
-classification. These tasks are achieved using an extended Expectation
-Maximization algorithm called Graphical Expectation Maximization (GEM)
-algorithm.
+This package allows the parameters estimation for a TRM or a TBN. The
+proposed algorithm uses functions from statmod and tweedie packages.
 
 This package exports the following functions:
 
--   graphSigma
--   graphMatrixAssoc
--   computeTau
--   gemEstimator.
+-   learn.tbn
+-   learn.trm
+-   scores.tbn
+-   scores.trm
+-   sensi.tbn
+-   sensi.trm
+-   generateSample
 
 Required set-up for this package
 --------------------------------
@@ -41,8 +31,8 @@ You can use the following code to install the development version of
 
 ``` r
 library(devtools)
-install_github("km20/gemalogrithm")
-library(gemalgorithm)
+install_github("km20/tbn")
+library(tbn)
 ```
 
 Applying Lauritzen’s formula : graphSigma

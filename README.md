@@ -2,12 +2,19 @@
 tbn : A package to deal with Tweedie Bayesian networks
 ======================================================
 
+General description
+-------------------
+
+A collection of algorithms and functions to aid statistical modeling.
 This package provides several useful functions to deal with both the
 Tweedie Regression models (TRMs) and the Tweedie Bayesian Networks
-(TBNs).
+(TBNs). (TBNs) constitutes a new family of continuous Bayesian networks
+whose conditional distributions belong to the Tweedie class.
 
-This package allows the parameters estimation for a TRM or a TBN. The
-proposed algorithm uses functions from statmod and tweedie packages.
+This package provides a full procedure for the learning of the TBN
+structure and parameters. It also introduces a sensitivity measure
+relying on the Kulback-Liebler divergence. The proposed algorithms
+partially relies on functions from statmod and tweedie packages.
 
 This package exports the following functions:
 
@@ -34,89 +41,3 @@ library(devtools)
 install_github("km20/tbn")
 library(tbn)
 ```
-
-Applying Lauritzen’s formula : graphSigma
------------------------------------------
-
-This function applies the lauritzen’s formula to a covariance matrix to
-take into account a decomposable graph structure. It uses the provided
-covariance matrix and the provided graph to compute the covariance
-matrix that perfectly fits the set of conditional independence
-relationships encoded by the graph’s cliques and seperators.
-
-### Example :
-
-``` r
-A <- matrix(0,5,5)
-diag(A) <- 1:5
-diag(A[-1,-5]) <- 1:4
-diag(A[-5,-1]) <- 1:4
-print(A)
-cliques <- list(c(1,2),c(2,3), c(3,4),c(4,5))
-separators <- list(c(2),c(3),c(4))
-nS <- c(1,1,1)
-Anew <- graphSigma(A, cliques, separators, nS)
-print(Anew)
-```
-
-Association degree between an undirected graph and a covariance matrix: graphMatrixAssoc
-----------------------------------------------------------------------------------------
-
-This function computes the association degree between a covariabce
-matrix and a graph. The computed metric relies only on the
-correspondance between the zeros in the inverted covariance matrix and
-the set of conditional independencies.
-
-``` r
-d1 <- graphMatrixAssoc(A,cliques)
-d0 <- graphMatrixAssoc(Anew,cliques)
-```
-
-Since Anew prefectly matches the conditional independencies in the
-graph, d0 is equal to 0. However, using the original matrix A, we get a
-value of d1 equal to 1.95.
-
-Posterior probability : computeTau
-----------------------------------
-
-The “computeTau” function calculates the posterior probability that each
-observation belongs to each of the mixture components.
-*τ*<sub>*i**j*</sub> is the posterior probability that the observation
-*X*<sub>*i*</sub> belongs to the *j*<sup>*t**h*</sup> component of the
-mixture and given by: $ \_{ij} = $
-
-This function returns a matrix with n rows ( observations number) and K
-columns (mixture components number).
-
-Parameters estimation : gemEstimator
-------------------------------------
-
-The main function in this package is the “gemEstimator” which estimates
-the Gaussian mixture parameters using the GEM algorithm. The mixture
-components number is supposed to be known. This function uses an initial
-parameters guess and a set of associated graphs to iteratively estimate
-the parameters.
-
-Starting from an intial parameters set *Θ*<sup>(0)</sup>, this function
-repeats iteratively the 3 steps of the GEM algorithm :
-
--   Expectation step : Computes the conditional expectation of the
-    complete-data log-likelihood given the observed data, using the
-    current fit *Θ*<sup>(*l*)</sup> :
-    *Q*(*Θ*\|\|*Θ*<sup>(*l*)</sup>) = *E*<sub>*Θ*<sup>(*l*)</sup></sub>(*L*(*X*<sub>1</sub>, ..., *X*<sub>*n*</sub>, *Z*<sub>1</sub>, ..., *Z*<sub>*n*</sub>, *Θ*)\|*X*<sub>1</sub>, ..., *X*<sub>*n*</sub>)
-
--   Maximization step: Consists in a global maximization of
-    *Q*(*Θ*\|\|*Θ*<sup>(*l*)</sup>) with respect to *Θ* :
-    *Θ*<sup>(*l* + 1)</sup> = arg max<sub>*Θ*</sub>*Q*(*Θ*\|\|*Θ*<sup>(*l*)</sup>)
-
--   G-Step : Applies the Lauriten’s formula to the estimated covariance
-    matrices in order to take into account the known independencies.
-
-The stopping rule depends on the “Nit” parameter used in the function
-gemEstimator:
-
--   If Nit &gt; 0 : The algorithm stops after exactly Nit iterations.
--   If Nit &lt; 0 : The algorithm stops when :
-    $$
-    \\frac{\|\|\\Theta^{l+1} -\\Theta^{l}\|\|}{1+\|\|\\Theta^{l}\|\|} &lt; 10^{-4}
-    $$

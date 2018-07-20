@@ -14,26 +14,23 @@ knitr::opts_chunk$set(
 )
 ```
 
-# tbn : A package to deal with Tweedie Bayesian networs
+# tbn : A package to deal with Tweedie Bayesian networks
 
-This package provides several useful functions to deal with Tweedie Regression mode (TRMs) and Tweedie Bayesian Networks (TBNs).
-$$ \begin{equation} f(x|\Theta) = \sum_{k=1}^{K}{\pi_k f_k(x|\mu_k,\Sigma_k)}\end{equation}$$
+## General description
 
-where $f_k(x|\mu_{k},\Sigma_{k})$ is the density function of the multivariate normal distribution with mean $\mu_{k}$ and covariance matrix $\Sigma_{k}$, and the mixing proportions $0<\pi_{k}<1$ satisfy $\displaystyle\sum_{k=1}^{K}\pi_{k}=1$.
-In addition, each component of this mixture is associated with a decomposable undirected graph $G_k =(V,\mathcal{E}_k)$, where $V$ is the vertices (nodes) set and $\mathcal{E}_k$ corresponds to the edges of the graph $G_k$.
-The set of all the mixture parameters is
-$$
- \Theta =\{\pi_1,...,\pi_K,\mu_1,...,\mu_K,\Sigma_1,...,\Sigma_K\}
-$$
+A collection of algorithms and functions to aid statistical modeling. This package provides several useful functions to deal with both the Tweedie Regression models (TRMs) and the Tweedie Bayesian Networks (TBNs). (TBNs) constitutes a new family of continuous Bayesian networks whose conditional distributions belong to the Tweedie class.
 
-This package allows the estimation of the mixture parameters and data classification. These tasks are achieved using an extended Expectation Maximization algorithm called Graphical Expectation Maximization (GEM) algorithm.
+This package provides a full procedure for the learning of the TBN structure and parameters. It also introduces a sensitivity measure relying on the Kulback-Liebler divergence. The proposed algorithms partially relies on functions from statmod and tweedie packages.
 
 This package exports the following functions:
 
-* graphSigma
-* graphMatrixAssoc
-* computeTau
-* gemEstimator.
+* learn.tbn
+* learn.trm
+* scores.tbn
+* scores.trm
+* sensi.tbn
+* sensi.trm
+* generateSample
 
 ## Required set-up for this package
 
@@ -43,80 +40,9 @@ You can use the following code to install the development version of `countyweat
 
 ```{r eval = FALSE}
 library(devtools)
-install_github("km20/gemalogrithm")
-library(gemalgorithm)
+install_github("km20/tbn")
+library(tbn)
 ```
 
 
-## Applying Lauritzen's formula : graphSigma
 
-This function applies the lauritzen's formula to a covariance matrix
-to take into account a decomposable graph structure. It uses the provided
-covariance matrix and the provided graph to compute the covariance matrix
-that perfectly fits the set of conditional independence relationships
-encoded by the graph's cliques and seperators.
-
-### Example :
-
-```{r, echo=FALSE}
-suppressMessages(library(knitr))
-```
-
-```{r, eval=FALSE}
-A <- matrix(0,5,5)
-diag(A) <- 1:5
-diag(A[-1,-5]) <- 1:4
-diag(A[-5,-1]) <- 1:4
-print(A)
-cliques <- list(c(1,2),c(2,3), c(3,4),c(4,5))
-separators <- list(c(2),c(3),c(4))
-nS <- c(1,1,1)
-Anew <- graphSigma(A, cliques, separators, nS)
-print(Anew)
-
-```
-## Association degree between an undirected graph and a covariance matrix: graphMatrixAssoc
-
-This function computes the association degree between a covariabce matrix and a graph. The computed metric relies only on the correspondance between the zeros in the inverted covariance matrix and the set of conditional independencies.
-
-```{r, eval=FALSE}
-d1 <- graphMatrixAssoc(A,cliques)
-d0 <- graphMatrixAssoc(Anew,cliques)
-```
-
-Since Anew prefectly matches the conditional independencies in the graph, d0 is equal to 0. However, using the original matrix A, we get a value of d1 equal to 1.95.
-
-## Posterior probability : computeTau
-
-The "computeTau" function calculates the posterior probability that each observation belongs to each of the mixture components. $\tau_{ij}$  is the posterior probability that the observation $X_i$ belongs to the $j^{th}$ component of the mixture and given by:
-$
-\tau_{ij} =\frac{\pi^{(l)}_j f_j(X_i|\mu_j,\Sigma_j)}{\sum\limits_{k=1}^K\pi_k f_k(X_i|\mu_k,\Sigma_k)}
-$
-
-This function returns a matrix with n rows ( observations number) and K columns (mixture components number).
-
-## Parameters estimation : gemEstimator
-
-The main function in this package is the "gemEstimator" which estimates the Gaussian mixture parameters using the GEM algorithm. The mixture components number is supposed to be known. This function uses an initial parameters guess and a set of associated graphs to iteratively estimate the parameters.
-
-Starting from an intial parameters set $\Theta^{(0)}$, this function repeats iteratively the 3 steps of the GEM algorithm :
-
-* Expectation step : Computes the conditional expectation of the complete-data log-likelihood given the observed data, using the current fit $\Theta^{(l)}$ :
-$$
-Q(\Theta||\Theta^{(l)}) = E_{\Theta^{(l)}}(L(X_1,...,X_n,Z_1,...,Z_n,\Theta)|X_1,...,X_n)
-$$
-
-* Maximization step: Consists in a global maximization of $Q(\Theta||\Theta^{(l)})$ with respect to $\Theta$ :
-$$
-\Theta^{(l+1)} = \arg \max_{\Theta} Q(\Theta||\Theta^{(l)})
-$$
-
-* G-Step : Applies the Lauriten's formula to the estimated covariance matrices in order to take into account the known independencies.
-
-The stopping rule depends on the "Nit" parameter used in the function gemEstimator:
-
-* If Nit > 0 : The algorithm stops after exactly Nit iterations.
-* If Nit < 0 : The algorithm stops when :
-$$
-\frac{||\Theta^{l+1} -\Theta^{l}||}{1+||\Theta^{l}||} < 10^{-4}
-$$

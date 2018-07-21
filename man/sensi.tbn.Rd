@@ -2,12 +2,12 @@
 % Please edit documentation in R/tbnfunctions.R
 \name{sensi.tbn}
 \alias{sensi.tbn}
-\title{Compute Sensitivity analyis given a tbn}
+\title{Compute a tbn Sensitivity to coefficients modification}
 \usage{
 sensi.tbn(beta, phi, p, db, X)
 }
 \arguments{
-\item{beta}{a matrix of the Tweedie Bayesian network coefficients.}
+\item{beta}{a lower triangular matrix of the Tweedie Bayesian network coefficients.}
 
 \item{phi}{a vector of dispersion parameters.}
 
@@ -26,4 +26,18 @@ Computes the sensitity of a Tweedie Bayesian network induced by a
 modification of the coefficient matrix. This sensistivity relies on the
 Kulback-Liebler divergence between the joint probability distributions
 induced by the original and the modified Tweedie bayesian networks.
+}
+\examples{
+\dontrun{
+beta = matrix(0,ncol=5,nrow=5)
+beta[1,1] = 1;
+beta[2,1] = 0.5
+beta[3,1] = -0.5; beta[3,2] = -0.7;beta[3,3] = -1.2
+beta[4,1] = -2; beta[4,3] = -1
+beta[5,1] = 0.2; beta[5,4] = 1; beta[5,5] = -2
+db = matrix(0,ncol=5,nrow=5)
+db[2,2] = 0.1 # adding an arc from X1 to X2.
+sensi.tbn(beta, c(1,2,1.5,1,1), c(2,2,3,2,0), db, X)
+}
+
 }

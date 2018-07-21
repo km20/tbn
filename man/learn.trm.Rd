@@ -26,3 +26,7 @@ object as returned by the glm or lm functions.)
 This is an implementation of the maximum likelihood method
 to estimate the parameters of Tweedie regression model.
 }
+\examples{
+learn.trm(data, V5~V2 + V3, pgrid=seq(2,3,0.05))
+
+}

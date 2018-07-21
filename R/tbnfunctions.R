@@ -15,6 +15,9 @@
 #' parameter, "beta" : the regression coefficients and "glm": a regression
 #' object as returned by the glm or lm functions.)
 #'
+#' @examples
+#' learn.trm(data, V5~V2 + V3, pgrid=seq(2,3,0.05))
+#'
 #' @export
 
 learn.trm <- function(data, formula, pgrid) {
@@ -78,8 +81,9 @@ learn.trm <- function(data, formula, pgrid) {
 #' the power parameters are chosen in order to maximize the model's
 #' log-likelihood. If the power parameter is knonw, each pgrid vector will
 #' contain a single value.
-#' @param G (optional) the Tweedie Bayesian network structure. If no graph is
-#' provided, the structure will be learned relying on student statistical tests.
+#' @param G (optional) the Tweedie Bayesian network structure as an adjacency
+#' matrix i.e., G[i,j] =1 if Xj is a parent of Xi. If no graph is provided, the
+#' structure will be learned relying on student statistical tests.
 #' @param nodes.order (optional) The nodes ordering defining an ancestral
 #' ordering of the Bayesian network.
 #' @param conf.level (optioal) The confidence level for the structure learning.
@@ -87,6 +91,10 @@ learn.trm <- function(data, formula, pgrid) {
 #'
 #' @return This function returns a named list consting of the Tweedie bayesian
 #' network structure and parameters.
+#'
+#' @examples
+#' # 3 nodes: the third is node has a Gaussian conditional distribution.
+#' learn.tbn(data, pgrids=list(c(2,3), c(2.2,2.3,2.4), c(0)))
 #'
 #' @export
 learn.tbn <- function(data,
@@ -215,6 +223,9 @@ scores.trm <- function(beta, phi, p, Y, X) {
 #' (RMSE), Normalized Root Mean Squared Error (NRMSE) and the log-likelihood
 #' (ll).
 #'
+#' @examples
+#' ll.bn(beta)
+#'
 #' @export
 
 ll.tbn <- function(beta, phi, p, X) {
@@ -271,7 +282,10 @@ scores.tbn <- function(beta, phi, p, X) {
        BIC = bic,
        locScore = locll$locScore)
 }
-#' Title
+#' Compute the sensitivity of TRM to coefficients modification.
+#'
+#' Compute the sensitivity of TRM to coefficients modification. The returned
+#' value corresponds to the local sensitivity of a Tweedie Bayesian network.
 #'
 #' @param beta a vector of regression coefficients.
 #' @param phi the dispersion parameter of the Tweedie regression model.
@@ -281,6 +295,12 @@ scores.tbn <- function(beta, phi, p, X) {
 #'
 #' @return This function returns the sensitivity of the tweedie regression model
 #' induced by the regression coefficients modification.
+#'
+#' @examples
+#' \dontrun{
+#' sensi.trm(c(0.2,0,0,1,-2),1,2, c(-0.1,0,0,-0.2,0), X)
+#' }
+#'
 #'
 #' @export
 sensi.trm <- function(beta, phi, p, db, X) {
@@ -305,14 +325,14 @@ sensi.trm <- function(beta, phi, p, db, X) {
   AverageSensi
 }
 
-#' Compute Sensitivity analyis given a tbn
+#' Compute a tbn Sensitivity to coefficients modification
 #'
 #' Computes the sensitity of a Tweedie Bayesian network induced by a
 #' modification of the coefficient matrix. This sensistivity relies on the
 #' Kulback-Liebler divergence between the joint probability distributions
 #' induced by the original and the modified Tweedie bayesian networks.
 #'
-#' @param beta a matrix of the Tweedie Bayesian network coefficients.
+#' @param beta a lower triangular matrix of the Tweedie Bayesian network coefficients.
 #' @param phi a vector of dispersion parameters.
 #' @param p a vector of power parameters.
 #' @param db a upper-triangular matrix of coefficients modification.
@@ -320,6 +340,19 @@ sensi.trm <- function(beta, phi, p, db, X) {
 #'
 #' @return This function returns a double corresponding to the Tweedie Bayesian
 #' network sensitivity.
+#'
+#' @examples
+#' \dontrun{
+#' beta = matrix(0,ncol=5,nrow=5)
+#' beta[1,1] = 1;
+#' beta[2,1] = 0.5
+#' beta[3,1] = -0.5; beta[3,2] = -0.7;beta[3,3] = -1.2
+#' beta[4,1] = -2; beta[4,3] = -1
+#' beta[5,1] = 0.2; beta[5,4] = 1; beta[5,5] = -2
+#' db = matrix(0,ncol=5,nrow=5)
+#' db[2,2] = 0.1 # adding an arc from X1 to X2.
+#' sensi.tbn(beta, c(1,2,1.5,1,1), c(2,2,3,2,0), db, X)
+#' }
 #'
 #' @export
 
@@ -343,7 +376,7 @@ sensi.tbn <- function(beta, phi, p, db, X) {
 #' Generates an n-random sample according to a Tweedie Bayesian network with
 #' parameters (p,phi,beta)
 #'
-#' @param beta a matrix of the Tweedie Bayesian network coefficients.
+#' @param beta a lower triangular matrix of the Tweedie Bayesian network coefficients.
 #' @param phi a vector of dispersion parameters.
 #' @param p a vector of power parameters.
 #' @param n an integer specifying the sample size.
@@ -351,8 +384,17 @@ sensi.tbn <- function(beta, phi, p, db, X) {
 #' @return This function returns a matrix containing a random sample of n
 #' vectors drawn form a Tweedie Bayesian network.
 #'
+#' @examples
+#' beta = matrix(0,ncol=5,nrow=5)
+#' beta[1,1] = 1;
+#' beta[2,1] = 0.5
+#' beta[3,1] = -0.5; beta[3,2] = -0.7;beta[3,3] = -1.2
+#' beta[4,1] = -2; beta[4,3] = -1
+#' beta[5,1] = 0.2; beta[5,4] = 1; beta[5,5] = -2
+#' generateSample.tbn(beta, c(1,2,1.5,1,1), c(2,2,3,2,0), 100)
+#'
 #' @export
-generateSample <- function(p, phi, beta, n) {
+generateSample.tbn <- function(beta, phi, p, n) {
   d = length(p)
   X = matrix(0, n, d)
   for (i in 1:d) {
@@ -382,5 +424,5 @@ generateSample <- function(p, phi, beta, n) {
                         phi = phi[i])
     }
   }
-  X
+  as.data.frame(X)
 }

@@ -34,7 +34,7 @@ use the package, you need to install it directly from GitHub using the
 `install_github` function from `devtools`.
 
 You can use the following code to install the development version of
-`countyweather`:
+`tbn`:
 
 ``` r
 library(devtools)

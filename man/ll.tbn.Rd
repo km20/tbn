@@ -25,3 +25,7 @@ Bayesian network scores: Mean Squared Error (MSE), Root Mean Squared Error
 This function computes the log-likelihood within a Tweedie Bayesian network
 for a given data set.
 }
+\examples{
+ll.bn(beta)
+
+}

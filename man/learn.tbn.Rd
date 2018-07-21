@@ -14,8 +14,9 @@ the power parameters are chosen in order to maximize the model's
 log-likelihood. If the power parameter is knonw, each pgrid vector will
 contain a single value.}
 
-\item{G}{(optional) the Tweedie Bayesian network structure. If no graph is
-provided, the structure will be learned relying on student statistical tests.}
+\item{G}{(optional) the Tweedie Bayesian network structure as an adjacency
+matrix i.e., G[i,j] =1 if Xj is a parent of Xi. If no graph is provided, the
+structure will be learned relying on student statistical tests.}
 
 \item{nodes.order}{(optional) The nodes ordering defining an ancestral
 ordering of the Bayesian network.}
@@ -32,4 +33,9 @@ This function builds a Tweedie Bayesian network based on a data set.
 It combines both structure and parameters learning. If a known graph is
 provided, only the parameters will be estimated relying on the provided
 network structure.
+}
+\examples{
+# 3 nodes: the third is node has a Gaussian conditional distribution.
+learn.tbn(data, pgrids=list(c(2,3), c(2.2,2.3,2.4), c(0)))
+
 }

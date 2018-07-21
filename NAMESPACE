@@ -4,7 +4,7 @@ export("learn.tbn",
        "scores.trm",
        "sensi.tbn",
        "sensi.trm",
-       "generateSample")
+       "generateSample.tbn")
 
 import(tweedie)
 importFrom("statmod","rinvgauss")

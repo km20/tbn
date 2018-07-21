@@ -2,7 +2,7 @@
 % Please edit documentation in R/tbnfunctions.R
 \name{sensi.trm}
 \alias{sensi.trm}
-\title{Title}
+\title{Compute the sensitivity of TRM to coefficients modification.}
 \usage{
 sensi.trm(beta, phi, p, db, X)
 }
@@ -22,5 +22,13 @@ This function returns the sensitivity of the tweedie regression model
 induced by the regression coefficients modification.
 }
 \description{
-Title
+Compute the sensitivity of TRM to coefficients modification. The returned
+value corresponds to the local sensitivity of a Tweedie Bayesian network.
+}
+\examples{
+\dontrun{
+sensi.trm(c(0.2,0,0,1,-2),1,2, c(-0.1,0,0,-0.2,0), X)
+}
+
+
 }

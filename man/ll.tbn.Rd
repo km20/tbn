@@ -26,6 +26,9 @@ This function computes the log-likelihood within a Tweedie Bayesian network
 for a given data set.
 }
 \examples{
-ll.bn(beta)
+\dontrun{
+ll.tbn(beta, phi, p, X)
+}
+
 
 }

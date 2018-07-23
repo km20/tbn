@@ -13,7 +13,7 @@ sensi.tbn(beta, phi, p, db, X)
 
 \item{p}{a vector of power parameters.}
 
-\item{db}{a upper-triangular matrix of coefficients modification.}
+\item{db}{an upper-triangular matrix of coefficients modification.}
 
 \item{X}{a data frame containing the variables of the model.}
 }

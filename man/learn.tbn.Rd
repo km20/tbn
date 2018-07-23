@@ -36,6 +36,9 @@ network structure.
 }
 \examples{
 # 3 nodes: the third is node has a Gaussian conditional distribution.
+\dontrun{
 learn.tbn(data, pgrids=list(c(2,3), c(2.2,2.3,2.4), c(0)))
+}
+
 
 }

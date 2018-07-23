@@ -4,8 +4,9 @@ export("learn.tbn",
        "scores.trm",
        "sensi.tbn",
        "sensi.trm",
-       "generateSample.tbn")
+       "generateSample.tbn",
+       "ll.tbn")
 
 import(tweedie)
-importFrom("statmod","rinvgauss")
-importFrom("stats","glm")
+import(statmod)
+import(stats)

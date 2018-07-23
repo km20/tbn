@@ -16,7 +16,10 @@
 #' object as returned by the glm or lm functions.)
 #'
 #' @examples
+#' \dontrun{
 #' learn.trm(data, V5~V2 + V3, pgrid=seq(2,3,0.05))
+#' }
+#'
 #'
 #' @export
 
@@ -94,7 +97,10 @@ learn.trm <- function(data, formula, pgrid) {
 #'
 #' @examples
 #' # 3 nodes: the third is node has a Gaussian conditional distribution.
+#' \dontrun{
 #' learn.tbn(data, pgrids=list(c(2,3), c(2.2,2.3,2.4), c(0)))
+#' }
+#'
 #'
 #' @export
 learn.tbn <- function(data,
@@ -224,7 +230,10 @@ scores.trm <- function(beta, phi, p, Y, X) {
 #' (ll).
 #'
 #' @examples
-#' ll.bn(beta)
+#' \dontrun{
+#' ll.tbn(beta, phi, p, X)
+#' }
+#'
 #'
 #' @export
 
@@ -335,7 +344,7 @@ sensi.trm <- function(beta, phi, p, db, X) {
 #' @param beta a lower triangular matrix of the Tweedie Bayesian network coefficients.
 #' @param phi a vector of dispersion parameters.
 #' @param p a vector of power parameters.
-#' @param db a upper-triangular matrix of coefficients modification.
+#' @param db an upper-triangular matrix of coefficients modification.
 #' @param X a data frame containing the variables of the model.
 #'
 #' @return This function returns a double corresponding to the Tweedie Bayesian
@@ -362,9 +371,9 @@ sensi.tbn <- function(beta, phi, p, db, X) {
   s = 0
   localSensis = vector(mode = "numeric", length = nrow(X))
   for (i in 1:d) {
-    temp.res = sensi.trm(tbn$beta[i, 1:i],
-                         tbn$phi[i],
-                         tbn$power[i],
+    temp.res = sensi.trm(beta[i, 1:i],
+                         phi[i],
+                         p[i],
                          db[i, 1:i],
                          as.matrix(X[, 1:i]))
     s = s + temp.res

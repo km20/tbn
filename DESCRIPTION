@@ -9,3 +9,4 @@ Description: A set of functions to deal with Tweedie Bayesian Networks.
 License: GPL (>=2)
 Encoding: UTF-8
 RoxygenNote: 6.0.1
+Imports: tweedie, stats, statmod

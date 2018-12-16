@@ -119,6 +119,7 @@ learn.tbn <- function(data,
   tvalue = beta
   rawbeta = beta
   phi = vector(mode = 'numeric', length = d)
+  p   = vector(mode = 'numeric', length = d)
   TBN = list()
   if (is.null(G)) {
     G = matrix(0, d, d)
@@ -161,6 +162,7 @@ learn.tbn <- function(data,
     tvalue[i, c(1, (2:i)[G[i,] > 0])] <-
       summary(res)$coefficients[, 3]
     phi[i] = trm.params$phi
+    p[i] = trm.params$p
   }
 
   TBN[["beta"]] = beta

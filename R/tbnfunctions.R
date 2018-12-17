@@ -43,7 +43,6 @@ learn.trm <- function(data, formula, pgrid) {
         )
       }, silent = TRUE)
       if (isTRUE(class(mod) == "try-error")) {
-        res = NA
         next
       } else{
         res = mod
